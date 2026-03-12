@@ -27,7 +27,7 @@ public class TasksService {
         response.setId(entity.getId());
         response.setTitle(entity.getTitle());
         response.setContent((entity.getContent()));
-        response.setStatus(entity.isStatus());
+        response.setStatus(entity.getStatus());
         response.setProjectId(entity.getProjectId());
         response.setUserId(entity.getUserId());
         return response;

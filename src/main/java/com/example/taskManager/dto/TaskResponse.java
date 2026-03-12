@@ -7,7 +7,7 @@ public class TaskResponse {
     private Integer id;
     private String title;
     private String content;
-    private boolean status;
+    private int status;
     private Integer projectId;
     private Integer userId;
 }
