@@ -24,12 +24,16 @@ public class TaskEntity {
     private boolean status;
 
     @CreationTimestamp
-    private LocalDateTime created_at;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    private LocalDateTime update_at;
+    @Column(name = "update_at")
+    private LocalDateTime updateAt;
 
-    private Integer project_id;
+    @Column(name = "project_id")
+    private Integer projectId;
 
-    private Integer user_id;
+    @Column(name = "user_id")
+    private Integer userId;
 }

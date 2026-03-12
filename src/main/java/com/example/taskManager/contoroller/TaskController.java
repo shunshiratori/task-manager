@@ -1,5 +1,6 @@
 package com.example.taskManager.contoroller;
 
+import com.example.taskManager.dto.TaskCreateResponse;
 import com.example.taskManager.entity.TaskEntity;
 import com.example.taskManager.service.TasksService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +16,7 @@ public class TaskController {
     }
 
     @PostMapping("/tasks")
-    public TaskEntity create(@RequestBody TaskEntity tasks) {
+    public TaskCreateResponse create(@RequestBody TaskEntity tasks) {
         return tasksService.create(tasks);
     }
 }
