@@ -1,11 +1,15 @@
 package com.example.taskManager.contoroller;
 
 import com.example.taskManager.dto.TaskCreateResponse;
+import com.example.taskManager.dto.TaskResponse;
 import com.example.taskManager.entity.TaskEntity;
 import com.example.taskManager.service.TasksService;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 public class TaskController {
@@ -18,5 +22,10 @@ public class TaskController {
     @PostMapping("/tasks")
     public TaskCreateResponse create(@RequestBody TaskEntity tasks) {
         return tasksService.create(tasks);
+    }
+
+    @GetMapping("/tasks")
+    public List<TaskResponse> get() {
+        return tasksService.get();
     }
 }
