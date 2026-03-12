@@ -9,16 +9,16 @@
 | authority_id | number | yes      | 権限id        |      |
 
 ## Tasks
-| Field      | Type      | Required | Description | memo            |
-|------------|-----------|----------|-------------|-----------------|
-| id         | number    | yes      | タスクid       |                 |
-| title      | string    | yes      | タスク名        |                 |
-| content    | string    | no       | タスク詳細       |                 |
-| status     | boolean   | yes      | タスク状況       |                 |
-| created_at | timestamp | yes      | 作成日時        |                 |
-| updated_at | timestamp | yes      | 更新日時        |                 |
-| project_id | number    | yes      | プロジェクトid    | projectsテーブルと連携 |
-| user_id    | number    | yes      | ユーザーid      | Usersテーブルと連携    |
+| Field      | Type      | Required | Description | memo             |
+|------------|-----------|----------|-------------|------------------|
+| id         | number    | yes      | タスクid       |                  |
+| title      | string    | yes      | タスク名        |                  |
+| content    | string    | no       | タスク詳細       |                  |
+| status     | string    | yes      | タスク状況       | 0:未実施、1:実行中、2:完了 |
+| created_at | timestamp | yes      | 作成日時        |                  |
+| updated_at | timestamp | yes      | 更新日時        |                  |
+| project_id | number    | yes      | プロジェクトid    | projectsテーブルと連携  |
+| user_id    | number    | yes      | ユーザーid      | Usersテーブルと連携     |
 
 
 ## Projects

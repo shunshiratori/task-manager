@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class TaskEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private int id;
 
     @Column(nullable = false)
     private String title;
@@ -21,7 +21,7 @@ public class TaskEntity {
     @Column(nullable = false)
     private String content;
 
-    private boolean status;
+    private int status;
 
     @CreationTimestamp
     @Column(name = "created_at")
@@ -32,8 +32,8 @@ public class TaskEntity {
     private LocalDateTime updateAt;
 
     @Column(name = "project_id")
-    private Integer projectId;
+    private int projectId;
 
     @Column(name = "user_id")
-    private Integer userId;
+    private int userId;
 }
