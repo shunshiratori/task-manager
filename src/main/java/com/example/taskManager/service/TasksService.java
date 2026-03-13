@@ -18,6 +18,7 @@ public class TasksService {
         this.repository = repository;
     }
 
+    // 作成
     public TaskCreateResponse create(TaskEntity tasks){
         TaskEntity entity = repository.save(tasks);
 
@@ -28,6 +29,7 @@ public class TasksService {
         return response;
     }
 
+    // 取得
     public List<TaskResponse> get() {
         List<TaskEntity> entity = repository.findAll();
         return entity.stream().map(this::convertToDto).collect(Collectors.toList());
@@ -58,5 +60,9 @@ public class TasksService {
         return response;
     }
 
+    // delete
+    public void delete(int id) {
+        repository.deleteById(id);
+    }
 
 }

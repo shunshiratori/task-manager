@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/tasks")
 public class TaskController {
     private final TasksService tasksService;
 
@@ -17,18 +18,23 @@ public class TaskController {
         this.tasksService = tasksService;
     }
 
-    @PostMapping("/tasks")
+    @PostMapping
     public TaskCreateResponse create(@RequestBody TaskEntity tasks) {
         return tasksService.create(tasks);
     }
 
-    @GetMapping("/tasks")
+    @GetMapping
     public List<TaskResponse> get() {
         return tasksService.get();
     }
 
-    @GetMapping("/tasks/{id}")
+    @GetMapping("/{id}")
     public Optional<TaskResponse> find(@PathVariable("id") int id) {
         return tasksService.find(id);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable("id") int id) {
+        tasksService.delete(id);
     }
 }
