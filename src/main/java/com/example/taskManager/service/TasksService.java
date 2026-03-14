@@ -2,6 +2,7 @@ package com.example.taskManager.service;
 
 import com.example.taskManager.dto.TaskCreateResponse;
 import com.example.taskManager.dto.TaskResponse;
+import com.example.taskManager.dto.TaskUpdateResponse;
 import com.example.taskManager.entity.TaskEntity;
 import com.example.taskManager.repository.TaskRepository;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,6 @@ public class TasksService {
         this.repository = repository;
     }
 
-    // 作成
     public TaskCreateResponse create(TaskEntity tasks){
         TaskEntity entity = repository.save(tasks);
 
@@ -29,7 +29,6 @@ public class TasksService {
         return response;
     }
 
-    // 取得
     public List<TaskResponse> get() {
         List<TaskEntity> entity = repository.findAll();
         return entity.stream().map(this::convertToDto).collect(Collectors.toList());
@@ -60,7 +59,22 @@ public class TasksService {
         return response;
     }
 
-    // delete
+    public TaskUpdateResponse update(int id, TaskEntity tasks) {
+        TaskEntity entity = repository.findById(id).orElseThrow(()-> new RuntimeException("Task not found"));
+
+        entity.setTitle(tasks.getTitle());
+        entity.setContent(tasks.getContent());
+        entity.setStatus(tasks.getStatus());
+        repository.save(entity);
+
+        TaskUpdateResponse response = new TaskUpdateResponse();
+        response.setId(entity.getId());
+        response.setTitle(entity.getTitle());
+        response.setContent(entity.getContent());
+        response.setStatus(entity.getStatus());
+        return response;
+    }
+
     public void delete(int id) {
         repository.deleteById(id);
     }

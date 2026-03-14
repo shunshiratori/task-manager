@@ -95,7 +95,9 @@ PUT /tasks/{id}
 ```json
 {
   "title": "タスクタイトル",
-  "content": "タスク詳細"
+  "content": "タスク詳細",
+  "status": "1"
+  
 }
 ```
 
@@ -107,6 +109,7 @@ Content-Type: application/json
 |---------|--------|----------|-------------|
 | title   | string | yes      | タスク名        |
 | content | string | yes      | タスク詳細       |
+| status  | int    | yes      | タスク状況       |
 
 ---
 ### Response Example
