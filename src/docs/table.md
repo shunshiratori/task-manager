@@ -26,7 +26,7 @@
 |--------------|-----------|----------|-------------|--------------|
 | project_id   | number    | yes      | プロジェクトid    |              |
 | title        | string    | yes      | プロジェクト名     |              |
-| status       | boolean   | yes      | プロジェクト状況    |              |
+| status       | int       | yes      | プロジェクト状況    |              |
 | created_at   | timestamp | yes      | 作成日時        |              |
 | updated_at   | timestamp | yes      | 更新日時        |              |
 | authority_id | number    | yes      | 権限id        |              |
