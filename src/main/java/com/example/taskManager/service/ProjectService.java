@@ -58,4 +58,8 @@ public class ProjectService {
         return response;
     }
 
+    public void delete(int id) {
+        repository.deleteById(id);
+    }
+
 }

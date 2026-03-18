@@ -31,4 +31,9 @@ public class ProjectController {
     public ProjectResponse update(@PathVariable("projectId") int id, @RequestBody ProjectEntity project) {
         return projectService.update(id,project);
     };
+
+    @DeleteMapping("/{projectId}")
+    public void delete(@PathVariable("projectId") int id) {
+        projectService.delete(id);
+    }
 }
