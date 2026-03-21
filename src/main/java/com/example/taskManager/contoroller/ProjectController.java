@@ -1,6 +1,7 @@
 package com.example.taskManager.contoroller;
 
 import com.example.taskManager.dto.ProjectCreateResponse;
+import com.example.taskManager.dto.ProjectFindResponse;
 import com.example.taskManager.dto.ProjectResponse;
 import com.example.taskManager.entity.ProjectEntity;
 import com.example.taskManager.service.ProjectService;
@@ -27,10 +28,15 @@ public class ProjectController {
         return projectService.get();
     }
 
+    @GetMapping("/{projectId}")
+    public ProjectFindResponse find(@PathVariable("projectId") int id) {
+        return projectService.find(id);
+    }
+
     @PutMapping("/{projectId}")
     public ProjectResponse update(@PathVariable("projectId") int id, @RequestBody ProjectEntity project) {
         return projectService.update(id,project);
-    };
+    }
 
     @DeleteMapping("/{projectId}")
     public void delete(@PathVariable("projectId") int id) {

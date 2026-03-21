@@ -1,7 +1,9 @@
 package com.example.taskManager.service;
 
 import com.example.taskManager.dto.ProjectCreateResponse;
+import com.example.taskManager.dto.ProjectFindResponse;
 import com.example.taskManager.dto.ProjectResponse;
+import com.example.taskManager.dto.TaskResponse;
 import com.example.taskManager.entity.ProjectEntity;
 import com.example.taskManager.repository.ProjectRepository;
 import org.springframework.stereotype.Service;
@@ -39,6 +41,31 @@ public class ProjectService {
         response.setTitle(entity.getTitle());
         response.setStatus(entity.getStatus());
         response.setAuthorityId(entity.getAuthorityId());
+        return response;
+    }
+
+    public ProjectFindResponse find(int id) {
+        ProjectEntity entity = repository.findByIdWithTasks(id).orElseThrow(()-> new RuntimeException("Project not fount"));
+
+        ProjectFindResponse response = new ProjectFindResponse();
+        response.setProjectId(entity.getProjectId());
+        response.setTitle(entity.getTitle());
+        response.setStatus(entity.getStatus());
+
+        if(entity.getTasks() != null) {
+            List<TaskResponse> tasks = entity.getTasks().stream()
+                    .map(task -> {
+                        TaskResponse t = new TaskResponse();
+                        t.setId(task.getId());
+                        t.setTitle(task.getTitle());
+                        t.setContent(task.getContent());
+                        t.setStatus(task.getStatus());
+                        t.setProjectId(task.getProject().getProjectId());
+                        return t;
+                    }).toList();
+
+            response.setTasks(tasks);
+        }
         return response;
     }
 
