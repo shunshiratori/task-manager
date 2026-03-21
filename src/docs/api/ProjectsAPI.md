@@ -76,7 +76,15 @@ GET /projects/{id}
     "id": 1,
     "project_id": 1,
     "title": "タスクタイトル",
-    "content": "タスク詳細"
+    "content": "タスク詳細",
+    "tasks": [
+      {
+        "id": 1,
+        "title": "タスク",
+        "content": "タスク内容",
+        "status": 0
+      }
+    ]
   }
 ]
 ```

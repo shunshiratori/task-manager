@@ -28,11 +28,12 @@ public class TaskEntity {
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(name = "update_at")
+    @Column(name = "updated_at")
     private LocalDateTime updateAt;
 
-    @Column(name = "project_id")
-    private int projectId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id")
+    private ProjectEntity project;
 
     @Column(name = "user_id")
     private int userId;

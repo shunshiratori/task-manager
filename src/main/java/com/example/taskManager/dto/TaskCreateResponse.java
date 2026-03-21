@@ -7,4 +7,5 @@ public class TaskCreateResponse {
     private Integer id;
     private String title;
     private String content;
+    private int project_id;
 }

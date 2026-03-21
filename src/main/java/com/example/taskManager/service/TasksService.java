@@ -26,6 +26,9 @@ public class TasksService {
         response.setId(entity.getId());
         response.setTitle(entity.getTitle());
         response.setContent(entity.getContent());
+        if (entity.getProject() != null) {
+            response.setProject_id(entity.getProject().getProjectId());
+        }
         return response;
     }
 
@@ -42,7 +45,7 @@ public class TasksService {
                     response.setTitle(entity.getTitle());
                     response.setContent(entity.getContent());
                     response.setStatus(entity.getStatus());
-                    response.setProjectId(entity.getProjectId());
+                    response.setProjectId(entity.getProject().getProjectId());
                     response.setUserId(entity.getUserId());
                     return response;
                 });
@@ -54,7 +57,7 @@ public class TasksService {
         response.setTitle(entity.getTitle());
         response.setContent((entity.getContent()));
         response.setStatus(entity.getStatus());
-        response.setProjectId(entity.getProjectId());
+        response.setProjectId(entity.getProject().getProjectId());
         response.setUserId(entity.getUserId());
         return response;
     }

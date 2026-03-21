@@ -2,9 +2,12 @@ package com.example.taskManager.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -19,7 +22,7 @@ public class ProjectEntity {
 
     private int status;
 
-    @UpdateTimestamp
+    @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
@@ -29,4 +32,7 @@ public class ProjectEntity {
 
     @Column(name = "authority_id")
     private int authorityId;
+
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+    private List<TaskEntity> tasks = new ArrayList<>();
 }
