@@ -1,9 +1,6 @@
 package com.example.taskManager.contoroller;
 
-import com.example.taskManager.dto.TaskCreateRequest;
-import com.example.taskManager.dto.TaskCreateResponse;
-import com.example.taskManager.dto.TaskResponse;
-import com.example.taskManager.dto.TaskUpdateResponse;
+import com.example.taskManager.dto.*;
 import com.example.taskManager.entity.TaskEntity;
 import com.example.taskManager.service.TasksService;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +33,7 @@ public class TaskController {
     }
 
     @PutMapping("/{id}")
-    public TaskUpdateResponse update(@PathVariable("id") int id, @RequestBody TaskEntity tasks) {
+    public TaskUpdateResponse update(@PathVariable("id") int id, @RequestBody TaskUpdateRequest tasks) {
         return tasksService.update(id, tasks);
     }
 

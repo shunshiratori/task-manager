@@ -1,9 +1,6 @@
 package com.example.taskManager.service;
 
-import com.example.taskManager.dto.TaskCreateRequest;
-import com.example.taskManager.dto.TaskCreateResponse;
-import com.example.taskManager.dto.TaskResponse;
-import com.example.taskManager.dto.TaskUpdateResponse;
+import com.example.taskManager.dto.*;
 import com.example.taskManager.entity.ProjectEntity;
 import com.example.taskManager.entity.TaskEntity;
 import com.example.taskManager.repository.ProjectRepository;
@@ -76,12 +73,16 @@ public class TasksService {
                 });
     }
 
-    public TaskUpdateResponse update(int id, TaskEntity tasks) {
+    public TaskUpdateResponse update(int id, TaskUpdateRequest tasks) {
         TaskEntity entity = repository.findById(id).orElseThrow(()-> new RuntimeException("Task not found"));
 
         entity.setTitle(tasks.getTitle());
         entity.setContent(tasks.getContent());
         entity.setStatus(tasks.getStatus());
+        if (tasks.getProjectId() != null) {
+            ProjectEntity project = projectRepository.getReferenceById(id);
+            entity.setProject(project);
+        }
         repository.save(entity);
 
         TaskUpdateResponse response = new TaskUpdateResponse();
@@ -89,6 +90,9 @@ public class TasksService {
         response.setTitle(entity.getTitle());
         response.setContent(entity.getContent());
         response.setStatus(entity.getStatus());
+        if (entity.getProject() != null) {
+            response.setProjectId(entity.getProject().getProjectId());
+        }
         return response;
     }
 
