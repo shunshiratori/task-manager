@@ -69,7 +69,7 @@ public class ProjectService {
         return response;
     }
 
-    public ProjectResponse update(int id, ProjectEntity project) {
+    public ProjectResponse update(int id, ProjectUpdateRequest project) {
         ProjectEntity entity = repository.findById(id).orElseThrow(()-> new RuntimeException("Project not found"));
 
         entity.setTitle(project.getTitle());

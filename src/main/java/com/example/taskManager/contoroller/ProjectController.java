@@ -1,9 +1,6 @@
 package com.example.taskManager.contoroller;
 
-import com.example.taskManager.dto.ProjectCreateRequest;
-import com.example.taskManager.dto.ProjectCreateResponse;
-import com.example.taskManager.dto.ProjectFindResponse;
-import com.example.taskManager.dto.ProjectResponse;
+import com.example.taskManager.dto.*;
 import com.example.taskManager.entity.ProjectEntity;
 import com.example.taskManager.service.ProjectService;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +32,7 @@ public class ProjectController {
     }
 
     @PutMapping("/{projectId}")
-    public ProjectResponse update(@PathVariable("projectId") int id, @RequestBody ProjectEntity project) {
+    public ProjectResponse update(@PathVariable("projectId") int id, @RequestBody ProjectUpdateRequest project) {
         return projectService.update(id,project);
     }
 
