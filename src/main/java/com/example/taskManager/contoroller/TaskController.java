@@ -1,5 +1,6 @@
 package com.example.taskManager.contoroller;
 
+import com.example.taskManager.dto.TaskCreateRequest;
 import com.example.taskManager.dto.TaskCreateResponse;
 import com.example.taskManager.dto.TaskResponse;
 import com.example.taskManager.dto.TaskUpdateResponse;
@@ -20,7 +21,7 @@ public class TaskController {
     }
 
     @PostMapping
-    public TaskCreateResponse create(@RequestBody TaskEntity tasks) {
+    public TaskCreateResponse create(@RequestBody TaskCreateRequest tasks) {
         return tasksService.create(tasks);
     }
 

@@ -1,9 +1,12 @@
 package com.example.taskManager.service;
 
+import com.example.taskManager.dto.TaskCreateRequest;
 import com.example.taskManager.dto.TaskCreateResponse;
 import com.example.taskManager.dto.TaskResponse;
 import com.example.taskManager.dto.TaskUpdateResponse;
+import com.example.taskManager.entity.ProjectEntity;
 import com.example.taskManager.entity.TaskEntity;
+import com.example.taskManager.repository.ProjectRepository;
 import com.example.taskManager.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 
@@ -14,13 +17,22 @@ import java.util.stream.Collectors;
 @Service
 public class TasksService {
     private final TaskRepository repository;
+    private final ProjectRepository projectRepository;
 
-    public TasksService(TaskRepository repository) {
+    public TasksService(TaskRepository repository, ProjectRepository projectRepository) {
         this.repository = repository;
+        this.projectRepository = projectRepository;
     }
 
-    public TaskCreateResponse create(TaskEntity tasks){
-        TaskEntity entity = repository.save(tasks);
+    public TaskCreateResponse create(TaskCreateRequest tasks){
+        TaskEntity entity = new TaskEntity();
+        entity.setTitle(tasks.getTitle());
+        entity.setContent(tasks.getContent());
+        if(tasks.getProjectId() != null) {
+            ProjectEntity project = projectRepository.getReferenceById(tasks.getProjectId());
+            entity.setProject(project);
+        }
+        repository.save(entity);
 
         TaskCreateResponse response = new TaskCreateResponse();
         response.setId(entity.getId());
