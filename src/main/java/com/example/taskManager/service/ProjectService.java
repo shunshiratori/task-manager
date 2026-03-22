@@ -1,9 +1,6 @@
 package com.example.taskManager.service;
 
-import com.example.taskManager.dto.ProjectCreateResponse;
-import com.example.taskManager.dto.ProjectFindResponse;
-import com.example.taskManager.dto.ProjectResponse;
-import com.example.taskManager.dto.TaskResponse;
+import com.example.taskManager.dto.*;
 import com.example.taskManager.entity.ProjectEntity;
 import com.example.taskManager.repository.ProjectRepository;
 import org.springframework.stereotype.Service;
@@ -19,8 +16,11 @@ public class ProjectService {
         this.repository = repository;
     }
 
-    public ProjectCreateResponse create(ProjectEntity projects) {
-        ProjectEntity entity = repository.save(projects);
+    public ProjectCreateResponse create(ProjectCreateRequest projects) {
+        ProjectEntity entity = new ProjectEntity();
+        entity.setTitle(projects.getTitle());
+        entity.setStatus(projects.getStatus());
+        repository.save(entity);
 
         ProjectCreateResponse response = new ProjectCreateResponse();
         response.setProjectId(entity.getProjectId());

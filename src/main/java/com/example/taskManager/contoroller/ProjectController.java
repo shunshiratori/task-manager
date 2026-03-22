@@ -1,5 +1,6 @@
 package com.example.taskManager.contoroller;
 
+import com.example.taskManager.dto.ProjectCreateRequest;
 import com.example.taskManager.dto.ProjectCreateResponse;
 import com.example.taskManager.dto.ProjectFindResponse;
 import com.example.taskManager.dto.ProjectResponse;
@@ -19,7 +20,7 @@ public class ProjectController {
     }
 
     @PostMapping
-    public ProjectCreateResponse create(@RequestBody ProjectEntity projects) {
+    public ProjectCreateResponse create(@RequestBody ProjectCreateRequest projects) {
         return projectService.create(projects);
     }
 
