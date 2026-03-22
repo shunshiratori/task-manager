@@ -49,6 +49,19 @@ public class TasksService {
         return entity.stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
+    public TaskResponse convertToDto(TaskEntity entity) {
+        TaskResponse response = new TaskResponse();
+        response.setId(entity.getId());
+        response.setTitle(entity.getTitle());
+        response.setContent((entity.getContent()));
+        response.setStatus(entity.getStatus());
+        if (entity.getProject() != null) {
+            response.setProjectId(entity.getProject().getProjectId());
+        }
+        response.setUserId(entity.getUserId());
+        return response;
+    }
+
     public Optional<TaskResponse> find(int id) {
         return repository.findById(id)
                 .map(entity -> {
@@ -61,17 +74,6 @@ public class TasksService {
                     response.setUserId(entity.getUserId());
                     return response;
                 });
-    }
-
-    public TaskResponse convertToDto(TaskEntity entity) {
-        TaskResponse response = new TaskResponse();
-        response.setId(entity.getId());
-        response.setTitle(entity.getTitle());
-        response.setContent((entity.getContent()));
-        response.setStatus(entity.getStatus());
-        response.setProjectId(entity.getProject().getProjectId());
-        response.setUserId(entity.getUserId());
-        return response;
     }
 
     public TaskUpdateResponse update(int id, TaskEntity tasks) {
