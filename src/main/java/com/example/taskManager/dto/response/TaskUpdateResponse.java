@@ -1,13 +1,12 @@
-package com.example.taskManager.dto;
+package com.example.taskManager.dto.response;
 
 import lombok.Data;
 
 @Data
-public class TaskResponse {
+public class TaskUpdateResponse {
     private Integer id;
     private String title;
     private String content;
     private int status;
     private Integer projectId;
-    private Integer userId;
 }

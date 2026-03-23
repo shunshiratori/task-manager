@@ -1,6 +1,11 @@
 package com.example.taskManager.service;
 
-import com.example.taskManager.dto.*;
+import com.example.taskManager.dto.request.ProjectCreateRequest;
+import com.example.taskManager.dto.request.ProjectUpdateRequest;
+import com.example.taskManager.dto.response.ProjectCreateResponse;
+import com.example.taskManager.dto.response.ProjectFindResponse;
+import com.example.taskManager.dto.response.ProjectResponse;
+import com.example.taskManager.dto.response.TaskResponse;
 import com.example.taskManager.entity.ProjectEntity;
 import com.example.taskManager.repository.ProjectRepository;
 import org.springframework.stereotype.Service;

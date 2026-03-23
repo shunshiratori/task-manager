@@ -1,7 +1,10 @@
 package com.example.taskManager.contoroller;
 
-import com.example.taskManager.dto.*;
-import com.example.taskManager.entity.TaskEntity;
+import com.example.taskManager.dto.request.TaskCreateRequest;
+import com.example.taskManager.dto.request.TaskUpdateRequest;
+import com.example.taskManager.dto.response.TaskCreateResponse;
+import com.example.taskManager.dto.response.TaskResponse;
+import com.example.taskManager.dto.response.TaskUpdateResponse;
 import com.example.taskManager.service.TasksService;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,11 +1,10 @@
-package com.example.taskManager.dto;
+package com.example.taskManager.dto.request;
 
 import lombok.Data;
 
 @Data
-public class TaskUpdateRequest {
+public class TaskCreateRequest {
     private String title;
     private String content;
-    private int status;
     private Integer projectId;
 }
