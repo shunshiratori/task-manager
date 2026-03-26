@@ -4,7 +4,7 @@
 http://localhost:8080
 ```
 
-# 1. ユーザー作成
+# ユーザー作成
 ## Endpoint
 POST /users
 
@@ -39,7 +39,7 @@ Status: 200 OK
 }
 ```
 
-# 2. ユーザー一覧取得
+# ユーザー一覧取得
 ## Endpoint
 GET /users
 
@@ -57,7 +57,7 @@ GET /users
 ]
 ```
 
-# 3. ユーザー取得
+# ユーザー取得
 ## Endpoint
 GET /users/{id}
 
