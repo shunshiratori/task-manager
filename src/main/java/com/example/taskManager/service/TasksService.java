@@ -29,6 +29,7 @@ public class TasksService {
         TaskEntity entity = new TaskEntity();
         entity.setTitle(tasks.getTitle());
         entity.setContent(tasks.getContent());
+        entity.setUserId(tasks.getUserId());
         if(tasks.getProjectId() != null) {
             ProjectEntity project = projectRepository.getReferenceById(tasks.getProjectId());
             entity.setProject(project);
@@ -39,6 +40,7 @@ public class TasksService {
         response.setId(entity.getId());
         response.setTitle(entity.getTitle());
         response.setContent(entity.getContent());
+        response.setUserId(entity.getUserId());
         if (entity.getProject() != null) {
             response.setProject_id(entity.getProject().getProjectId());
         }

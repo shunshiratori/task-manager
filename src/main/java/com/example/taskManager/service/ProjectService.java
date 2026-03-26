@@ -25,12 +25,14 @@ public class ProjectService {
         ProjectEntity entity = new ProjectEntity();
         entity.setTitle(projects.getTitle());
         entity.setStatus(projects.getStatus());
+        entity.setUserId(projects.getUserId());
         repository.save(entity);
 
         ProjectCreateResponse response = new ProjectCreateResponse();
         response.setProjectId(entity.getProjectId());
         response.setTitle(entity.getTitle());
         response.setStatus(entity.getStatus());
+        response.setUserId(entity.getUserId());
         response.setAuthorityId(entity.getAuthorityId());
         return response;
     }

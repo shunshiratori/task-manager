@@ -30,6 +30,9 @@ public class ProjectEntity {
     @Column(name = "updated_at")
     private LocalDateTime updateAt;
 
+    @Column(name = "user_id")
+    private int userId;
+
     @Column(name = "authority_id")
     private int authorityId;
 

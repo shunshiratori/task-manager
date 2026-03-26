@@ -7,5 +7,6 @@ public class ProjectCreateResponse {
     private int projectId;
     private String title;
     private int status;
+    private Integer userId;
     private int authorityId;
 }
