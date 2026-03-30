@@ -35,6 +35,7 @@ public class TaskEntity {
     @JoinColumn(name = "project_id")
     private ProjectEntity project;
 
-    @Column(name = "user_id")
-    private int userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 }

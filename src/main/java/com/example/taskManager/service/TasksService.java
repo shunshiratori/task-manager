@@ -7,8 +7,10 @@ import com.example.taskManager.dto.response.TaskResponse;
 import com.example.taskManager.dto.response.TaskUpdateResponse;
 import com.example.taskManager.entity.ProjectEntity;
 import com.example.taskManager.entity.TaskEntity;
+import com.example.taskManager.entity.UserEntity;
 import com.example.taskManager.repository.ProjectRepository;
 import com.example.taskManager.repository.TaskRepository;
+import com.example.taskManager.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,20 +21,25 @@ import java.util.stream.Collectors;
 public class TasksService {
     private final TaskRepository repository;
     private final ProjectRepository projectRepository;
+    private final UserRepository userRepository;
 
-    public TasksService(TaskRepository repository, ProjectRepository projectRepository) {
+    public TasksService(TaskRepository repository, ProjectRepository projectRepository, UserRepository userRepository) {
         this.repository = repository;
         this.projectRepository = projectRepository;
+        this.userRepository = userRepository;
     }
 
     public TaskCreateResponse create(TaskCreateRequest tasks){
         TaskEntity entity = new TaskEntity();
         entity.setTitle(tasks.getTitle());
         entity.setContent(tasks.getContent());
-        entity.setUserId(tasks.getUserId());
         if(tasks.getProjectId() != null) {
             ProjectEntity project = projectRepository.getReferenceById(tasks.getProjectId());
             entity.setProject(project);
+        }
+        if (tasks.getUserId() != null) {
+            UserEntity user = userRepository.getReferenceById(tasks.getUserId());
+            entity.setUser(user);
         }
         repository.save(entity);
 
@@ -40,9 +47,11 @@ public class TasksService {
         response.setId(entity.getId());
         response.setTitle(entity.getTitle());
         response.setContent(entity.getContent());
-        response.setUserId(entity.getUserId());
         if (entity.getProject() != null) {
             response.setProject_id(entity.getProject().getProjectId());
+        }
+        if (entity.getUser() != null) {
+            response.setUserId(entity.getUser().getUserId());
         }
         return response;
     }
@@ -61,7 +70,9 @@ public class TasksService {
         if (entity.getProject() != null) {
             response.setProjectId(entity.getProject().getProjectId());
         }
-        response.setUserId(entity.getUserId());
+        if (entity.getUser() != null) {
+            response.setUserId(entity.getUser().getUserId());
+        }
         return response;
     }
 
@@ -74,7 +85,9 @@ public class TasksService {
                     response.setContent(entity.getContent());
                     response.setStatus(entity.getStatus());
                     response.setProjectId(entity.getProject().getProjectId());
-                    response.setUserId(entity.getUserId());
+                    if (entity.getUser() != null){
+                        response.setUserId(entity.getUser().getUserId());
+                    }
                     return response;
                 });
     }

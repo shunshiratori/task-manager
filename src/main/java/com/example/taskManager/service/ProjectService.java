@@ -7,7 +7,9 @@ import com.example.taskManager.dto.response.ProjectFindResponse;
 import com.example.taskManager.dto.response.ProjectResponse;
 import com.example.taskManager.dto.response.TaskResponse;
 import com.example.taskManager.entity.ProjectEntity;
+import com.example.taskManager.entity.UserEntity;
 import com.example.taskManager.repository.ProjectRepository;
+import com.example.taskManager.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,23 +18,30 @@ import java.util.stream.Collectors;
 @Service
 public class ProjectService {
     private final ProjectRepository repository;
+    private final UserRepository userRepository;
 
-    public ProjectService(ProjectRepository repository) {
+    public ProjectService(ProjectRepository repository, UserRepository userRepository) {
         this.repository = repository;
+        this.userRepository = userRepository;
     }
 
     public ProjectCreateResponse create(ProjectCreateRequest projects) {
         ProjectEntity entity = new ProjectEntity();
         entity.setTitle(projects.getTitle());
         entity.setStatus(projects.getStatus());
-        entity.setUserId(projects.getUserId());
+        if (entity.getUser() != null) {
+            UserEntity user = userRepository.getReferenceById(projects.getUserId());
+            entity.setUser(user);
+        }
         repository.save(entity);
 
         ProjectCreateResponse response = new ProjectCreateResponse();
         response.setProjectId(entity.getProjectId());
         response.setTitle(entity.getTitle());
         response.setStatus(entity.getStatus());
-        response.setUserId(entity.getUserId());
+        if (entity.getUser() != null) {
+            response.setUserId(entity.getUser().getUserId());
+        }
         response.setAuthorityId(entity.getAuthorityId());
         return response;
     }
