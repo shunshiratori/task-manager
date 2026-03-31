@@ -61,6 +61,11 @@ public class TasksService {
         return entity.stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
+    public List<TaskResponse> get(int userId) {
+        List<TaskEntity> entity = repository.findByUserUserId(userId);
+        return entity.stream().map(this::convertToDto).collect(Collectors.toList());
+    }
+
     public TaskResponse convertToDto(TaskEntity entity) {
         TaskResponse response = new TaskResponse();
         response.setId(entity.getId());
