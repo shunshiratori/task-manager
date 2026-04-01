@@ -29,7 +29,7 @@ public class ProjectService {
         ProjectEntity entity = new ProjectEntity();
         entity.setTitle(projects.getTitle());
         entity.setStatus(projects.getStatus());
-        if (entity.getUser() != null) {
+        if (projects.getUserId() != null) {
             UserEntity user = userRepository.getReferenceById(projects.getUserId());
             entity.setUser(user);
         }
@@ -46,8 +46,11 @@ public class ProjectService {
         return response;
     }
 
-    public List<ProjectResponse> get() {
-        List<ProjectEntity> entity = repository.findAll();
+
+    public List<ProjectResponse> get(Integer userId) {
+            List<ProjectEntity> entity = userId != null
+                    ? repository.findByUserUserId(userId)
+                    : repository.findAll();
         return entity.stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
@@ -57,6 +60,7 @@ public class ProjectService {
         response.setTitle(entity.getTitle());
         response.setStatus(entity.getStatus());
         response.setAuthorityId(entity.getAuthorityId());
+        response.setUserId(entity.getUser().getUserId());
         return response;
     }
 

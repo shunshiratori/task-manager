@@ -8,4 +8,5 @@ public class ProjectResponse {
     private String title;
     private int status;
     private int authorityId;
+    private int userId;
 }

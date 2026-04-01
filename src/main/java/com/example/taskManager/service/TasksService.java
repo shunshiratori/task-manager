@@ -56,13 +56,10 @@ public class TasksService {
         return response;
     }
 
-    public List<TaskResponse> get() {
-        List<TaskEntity> entity = repository.findAll();
-        return entity.stream().map(this::convertToDto).collect(Collectors.toList());
-    }
-
-    public List<TaskResponse> get(int userId) {
-        List<TaskEntity> entity = repository.findByUserUserId(userId);
+    public List<TaskResponse> get(Integer userId) {
+        List<TaskEntity> entity = userId != null
+                ? repository.findByUserUserId(userId)
+                : repository.findAll();
         return entity.stream().map(this::convertToDto).collect(Collectors.toList());
     }
 

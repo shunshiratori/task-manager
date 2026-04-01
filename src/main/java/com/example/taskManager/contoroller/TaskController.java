@@ -27,10 +27,7 @@ public class TaskController {
 
     @GetMapping
     public List<TaskResponse> get(@RequestParam(required = false) Integer userId) {
-        if (userId != null) {
             return tasksService.get(userId);
-        }
-        return tasksService.get();
     }
 
     @GetMapping("/{id}")

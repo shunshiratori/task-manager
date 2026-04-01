@@ -25,8 +25,8 @@ public class ProjectController {
     }
 
     @GetMapping
-    public List<ProjectResponse> get() {
-        return projectService.get();
+    public List<ProjectResponse> get(@RequestParam(required = false) Integer userId) {
+            return projectService.get(userId);
     }
 
     @GetMapping("/{projectId}")
