@@ -12,13 +12,14 @@ import java.util.List;
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int userId;
+    private Long userId;
 
     private String name;
 
+    @Column(unique = true)
     private String mail;
 
-    private Long password;
+    private String password;
 
     private int authorityId;
 

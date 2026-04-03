@@ -9,5 +9,5 @@ public class TaskResponse {
     private String content;
     private int status;
     private Integer projectId;
-    private Integer userId;
+    private Long userId;
 }
