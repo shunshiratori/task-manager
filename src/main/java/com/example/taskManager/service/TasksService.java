@@ -56,7 +56,7 @@ public class TasksService {
         return response;
     }
 
-    public List<TaskResponse> get(Integer userId) {
+    public List<TaskResponse> get(Long userId) {
         List<TaskEntity> entity = userId != null
                 ? repository.findByUserUserId(userId)
                 : repository.findAll();

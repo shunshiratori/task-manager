@@ -1,11 +1,13 @@
 package com.example.taskManager.contoroller;
 
+import com.example.taskManager.Util.JwtUtil;
 import com.example.taskManager.dto.request.TaskCreateRequest;
 import com.example.taskManager.dto.request.TaskUpdateRequest;
 import com.example.taskManager.dto.response.TaskCreateResponse;
 import com.example.taskManager.dto.response.TaskResponse;
 import com.example.taskManager.dto.response.TaskUpdateResponse;
 import com.example.taskManager.service.TasksService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,8 +28,9 @@ public class TaskController {
     }
 
     @GetMapping
-    public List<TaskResponse> get(@RequestParam(required = false) Integer userId) {
-            return tasksService.get(userId);
+    public List<TaskResponse> get(HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute("userId");
+        return tasksService.get(userId);
     }
 
     @GetMapping("/{id}")
