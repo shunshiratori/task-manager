@@ -11,6 +11,7 @@ import com.example.taskManager.entity.UserEntity;
 import com.example.taskManager.repository.ProjectRepository;
 import com.example.taskManager.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,6 +26,7 @@ public class ProjectService {
         this.userRepository = userRepository;
     }
 
+    @Transactional
     public ProjectCreateResponse create(ProjectCreateRequest projects) {
         ProjectEntity entity = new ProjectEntity();
         entity.setTitle(projects.getTitle());
@@ -46,7 +48,6 @@ public class ProjectService {
         return response;
     }
 
-
     public List<ProjectResponse> get(Integer userId) {
             List<ProjectEntity> entity = userId != null
                     ? repository.findByUserUserId(userId)
@@ -64,6 +65,7 @@ public class ProjectService {
         return response;
     }
 
+    @Transactional(readOnly = true)
     public ProjectFindResponse find(int id) {
         ProjectEntity entity = repository.findByIdWithTasks(id).orElseThrow(()-> new RuntimeException("Project not fount"));
 

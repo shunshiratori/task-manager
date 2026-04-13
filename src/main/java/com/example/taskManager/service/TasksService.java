@@ -12,6 +12,7 @@ import com.example.taskManager.repository.ProjectRepository;
 import com.example.taskManager.repository.TaskRepository;
 import com.example.taskManager.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +30,7 @@ public class TasksService {
         this.userRepository = userRepository;
     }
 
+    @Transactional
     public TaskCreateResponse create(TaskCreateRequest tasks){
         TaskEntity entity = new TaskEntity();
         entity.setTitle(tasks.getTitle());
@@ -78,6 +80,7 @@ public class TasksService {
         return response;
     }
 
+    @Transactional(readOnly = true)
     public Optional<TaskResponse> find(int id) {
         return repository.findById(id)
                 .map(entity -> {
@@ -94,6 +97,7 @@ public class TasksService {
                 });
     }
 
+    @Transactional
     public TaskUpdateResponse update(int id, TaskUpdateRequest tasks) {
         TaskEntity entity = repository.findById(id).orElseThrow(()-> new RuntimeException("Task not found"));
 
