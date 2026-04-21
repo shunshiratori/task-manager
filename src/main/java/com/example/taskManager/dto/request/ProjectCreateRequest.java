@@ -6,5 +6,5 @@ import lombok.Data;
 public class ProjectCreateRequest {
     private String title;
     private int status;
-    private Integer userId;
+    private Long userId;
 }

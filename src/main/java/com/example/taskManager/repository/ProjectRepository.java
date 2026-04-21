@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface ProjectRepository extends JpaRepository<ProjectEntity, Integer> {
     @Query("SELECT p FROM ProjectEntity p LEFT JOIN FETCH p.tasks WHERE p.projectId = :projectId")
     Optional<ProjectEntity> findByIdWithTasks(@Param("projectId") int projectId);
-    List<ProjectEntity> findByUserUserId(int userId);
+    List<ProjectEntity> findByUserUserId(Long userId);
 }

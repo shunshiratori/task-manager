@@ -32,7 +32,7 @@ public class ProjectService {
         entity.setTitle(projects.getTitle());
         entity.setStatus(projects.getStatus());
         if (projects.getUserId() != null) {
-            UserEntity user = userRepository.getReferenceById(projects.getUserId());
+            UserEntity user = userRepository.getReferenceById(projects.getUserId().intValue());
             entity.setUser(user);
         }
         repository.save(entity);
@@ -48,7 +48,7 @@ public class ProjectService {
         return response;
     }
 
-    public List<ProjectResponse> get(Integer userId) {
+    public List<ProjectResponse> get(Long userId) {
             List<ProjectEntity> entity = userId != null
                     ? repository.findByUserUserId(userId)
                     : repository.findAll();
