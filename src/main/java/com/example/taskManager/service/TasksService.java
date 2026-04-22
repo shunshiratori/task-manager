@@ -105,7 +105,7 @@ public class TasksService {
         entity.setContent(tasks.getContent());
         entity.setStatus(tasks.getStatus());
         if (tasks.getProjectId() != null) {
-            ProjectEntity project = projectRepository.getReferenceById(id);
+            ProjectEntity project = projectRepository.getReferenceById(tasks.getProjectId());
             entity.setProject(project);
         }
         repository.save(entity);

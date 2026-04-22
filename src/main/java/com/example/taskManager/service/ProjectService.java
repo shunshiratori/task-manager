@@ -32,7 +32,7 @@ public class ProjectService {
         entity.setTitle(projects.getTitle());
         entity.setStatus(projects.getStatus());
         if (projects.getUserId() != null) {
-            UserEntity user = userRepository.getReferenceById(projects.getUserId().intValue());
+            UserEntity user = userRepository.getReferenceById(projects.getUserId());
             entity.setUser(user);
         }
         repository.save(entity);

@@ -46,7 +46,7 @@ class ProjectServiceTest {
     void create() {
         UserEntity mockUser = new UserEntity();
         mockUser.setUserId(1L);
-        when(userRepository.getReferenceById(1)).thenReturn(mockUser);
+        when(userRepository.getReferenceById(1L)).thenReturn(mockUser);
 
         ProjectCreateRequest request = new ProjectCreateRequest();
         request.setTitle("プロジェクト1");
