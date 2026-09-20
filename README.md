@@ -15,7 +15,7 @@ Spring Boot で構築されたタスク管理アプリケーション。ユー�
 
 - **フレームワーク**: Spring Boot 4.0.3
 - **言語**: Java 17
-- **データベース**: H2（開発用）/ PostgreSQL（本番用）
+- **データベース**: MySQL
 - **認証**: JWT (io.jsonwebtoken)
 - **ORM**: Spring Data JPA
 - **検証**: Spring Validation
@@ -71,7 +71,7 @@ Service 層で `@Transactional` アノテーションを使用：
 
 ## API エンドポイント
 
-詳細は [`src/docs/api/`](src/docs/api/) ディレクトリを参照：
+詳細は [`src/docs/api/`](src/docs/api) ディレクトリを参照：
 
 - [`UsersAPI.md`](src/docs/api/UsersAPI.md) - ユーザー管理 API
 - [`ProjectsAPI.md`](src/docs/api/ProjectsAPI.md) - プロジェクト管理 API
@@ -105,32 +105,40 @@ Service 層で `@Transactional` アノテーションを使用：
 ### 前提条件
 
 - Java 17
-- Maven 3.6+
+- Docker
 
 ### 実行方法
 
 ```bash
-# 依存関係のダウンロード
-mvn clean install
-
-# アプリケーション起動
-mvn spring-boot:run
+# 初回のみ: MySQL コンテナを作成・起動
+docker run --name mysql-local \
+  -e MYSQL_ROOT_PASSWORD=root \
+  -e MYSQL_DATABASE=taskmanager \
+  -p 3306:3306 \
+  -d mysql:8.0
 ```
 
-デフォルトでは `http://localhost:8080` で起動します。
+2 回目以降は、代わりに停止中のコンテナを起動します。
 
-### H2 コンソール
-
-開発時は以下のアドレスで H2 コンソールにアクセス可能：
-
+```bash
+docker start mysql-local
 ```
-http://localhost:8080/h2-console
+
+MySQL が起動したら、アプリケーションを起動します。
+
+```bash
+./mvnw spring-boot:run
 ```
+
+アプリケーションはデフォルトで `http://localhost:8080` で起動します。
+
+ローカルの接続設定は `src/main/resources/application.yml` にあり、データベース名は `taskmanager`、ユーザー名とパスワードは `root` です。現在の `ddl-auto: create` 設定では、**アプリケーションを起動するたびにテーブルが作り直され、既存データが消えます**。
+
+MySQL の別の起動方法や本番環境の設定は [`MYSQL_SETUP.md`](MYSQL_SETUP.md) を参照してください。
 
 ## テスト
 
 ```bash
 # すべてのテストを実行
-mvn test
+./mvnw test
 ```
-
