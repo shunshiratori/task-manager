@@ -6,8 +6,9 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class FilterConfig {
+
     @Bean
-    public Filter jwtFilter() {
-        return new JwtFilter();
+    public Filter jwtFilter(JwtUtil jwtUtil) {
+        return new JwtFilter(jwtUtil);
     }
 }
