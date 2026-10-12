@@ -81,6 +81,7 @@ class TasksServiceTest {
     @DisplayName("正常系: find")
     void find() {
         int taskId = 1;
+        Long userId = 1L;
 
         TaskEntity task = new TaskEntity();
         task.setId(taskId);
@@ -96,29 +97,33 @@ class TasksServiceTest {
         user.setUserId(1L);
         task.setUser(user);
 
-        when(taskRepository.findById(taskId)).thenReturn(Optional.of(task));
+        when(taskRepository.findByIdAndUserUserId(taskId, userId))
+                .thenReturn(Optional.of(task));
 
-        Optional<TaskResponse> result = tasksService.find(taskId);
+        TaskResponse result = tasksService.find(taskId, userId);
 
-        assertEquals(1, result.get().getId());
-        assertEquals("タスク1", result.get().getTitle());
-        assertEquals("内容1", result.get().getContent());
-        assertEquals(0, result.get().getStatus());
-        assertEquals(1, result.get().getProjectId());
-        assertEquals(1L, result.get().getUserId());
+        assertEquals(1, result.getId());
+        assertEquals("タスク1", result.getTitle());
+        assertEquals("内容1", result.getContent());
+        assertEquals(0, result.getStatus());
+        assertEquals(1, result.getProjectId());
+        assertEquals(1L, result.getUserId());
     }
 
     @Test
     @DisplayName("正常系: update")
     void update() {
         int taskId = 1;
+        Long userId = 1L;
+
         TaskEntity existingTask = new TaskEntity();
         existingTask.setId(taskId);
         existingTask.setTitle("古いタイトル");
         existingTask.setContent("古い内容");
         existingTask.setStatus(0);
 
-        when(taskRepository.findById(taskId)).thenReturn(Optional.of(existingTask));
+        when(taskRepository.findByIdAndUserUserId(taskId, userId))
+                .thenReturn(Optional.of(existingTask));
 
         ProjectEntity project = new ProjectEntity();
         project.setProjectId(2);
@@ -130,7 +135,7 @@ class TasksServiceTest {
         updateRequest.setStatus(1);
         updateRequest.setProjectId(2);
 
-        TaskUpdateResponse result = tasksService.update(taskId, updateRequest);
+        TaskUpdateResponse result = tasksService.update(taskId, updateRequest, userId);
 
         assertEquals(1, result.getId());
         assertEquals("新しいタイトル", result.getTitle());

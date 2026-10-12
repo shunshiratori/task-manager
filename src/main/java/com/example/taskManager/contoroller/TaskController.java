@@ -34,17 +34,17 @@ public class TaskController {
     }
 
     @GetMapping("/{id}")
-    public Optional<TaskResponse> find(@PathVariable("id") int id) {
-        return tasksService.find(id);
+    public TaskResponse find(@PathVariable("id") int id, @RequestAttribute("userId") Long userId) {
+        return tasksService.find(id, userId);
     }
 
     @PutMapping("/{id}")
-    public TaskUpdateResponse update(@PathVariable("id") int id, @RequestBody TaskUpdateRequest tasks) {
-        return tasksService.update(id, tasks);
+    public TaskUpdateResponse update(@PathVariable("id") int id, @RequestBody TaskUpdateRequest tasks, @RequestAttribute("userId") Long userId) {
+        return tasksService.update(id, tasks, userId);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") int id) {
-        tasksService.delete(id);
+    public void delete(@PathVariable("id") int id, @RequestAttribute("userId")Long userId) {
+        tasksService.delete(id, userId);
     }
 }
