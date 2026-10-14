@@ -1,0 +1,10 @@
+package com.example.taskmanager.dto.request;
+
+import lombok.Data;
+
+@Data
+public class ProjectCreateRequest {
+    private String title;
+    private int status;
+    private Long userId;
+}

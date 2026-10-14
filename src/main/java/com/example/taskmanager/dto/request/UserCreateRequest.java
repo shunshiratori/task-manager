@@ -1,0 +1,10 @@
+package com.example.taskmanager.dto.request;
+
+import lombok.Data;
+
+@Data
+public class UserCreateRequest {
+    private String name;
+    private String mail;
+    private String password;
+}
