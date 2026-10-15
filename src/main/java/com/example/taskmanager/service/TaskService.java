@@ -51,7 +51,7 @@ public class TaskService {
         response.setTitle(entity.getTitle());
         response.setContent(entity.getContent());
         if (entity.getProject() != null) {
-            response.setProject_id(entity.getProject().getProjectId());
+            response.setProjectId(entity.getProject().getProjectId());
         }
         if (entity.getUser() != null) {
             response.setUserId(entity.getUser().getUserId());

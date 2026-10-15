@@ -66,7 +66,7 @@ class TaskServiceTest {
         expect.setId(result.getId());
         expect.setTitle("タスク1");
         expect.setContent("内容1");
-        expect.setProject_id(1);
+        expect.setProjectId(1);
         expect.setUserId(1L);
 
         assertEquals(expect, result);

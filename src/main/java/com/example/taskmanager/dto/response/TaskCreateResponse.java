@@ -8,5 +8,5 @@ public class TaskCreateResponse {
     private String title;
     private String content;
     private Long userId;
-    private Integer project_id;
+    private Integer projectId;
 }
