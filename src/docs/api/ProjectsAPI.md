@@ -1,139 +1,55 @@
-## Base URL
+# Project API
 
-```
-http://localhost:8080
-```
+全操作で`Authorization: Bearer <token>`が必要です。JSONリクエストには`Content-Type: application/json`を指定します。
 
-# プロジェクト作成
+| 操作 | エンドポイント | 成功時 |
+|---|---|---|
+| 作成 | `POST /projects` | 200・ProjectCreateResponse |
+| 一覧 | `GET /projects?userId=1` | 200・ProjectResponseの配列 |
+| 詳細 | `GET /projects/{projectId}` | 200・ProjectFindResponse |
+| 更新 | `PUT /projects/{projectId}` | 200・ProjectResponse |
+| 削除 | `DELETE /projects/{projectId}` | 200・本文なし |
 
-## Endpoint
-POST /projects
+現状、Projectはログインユーザーによる所有者制限が未実装です。一覧の`userId`は任意の検索条件で、省略すると全件を返します。Taskの所有者制限と同じ保証はありません。
 
-## Description
-プロジェクトを新規作成する。
-
-### Request
-Content-Type: application/json
-
-| Field  | Type   | Required | Description |
-|--------|--------|----------|-------------|
-| title  | string | yes      | プロジェクト名     |
-| status | string | yes      | プロジェクト状況    |
-
-### Request Example
-```json
-{
-  "title": "タスクタイトル",
-  "status": 0
-}
-```
-
-### Response
-Status: 200 OK
+## 作成
 
 ```json
-{
-  "project_id": 1,
-  "title": "タスクタイトル",
-  "status": 0
-}
+{"title":"API example","status":0,"userId":1}
 ```
 
-# プロジェクト一覧取得
-
-## Endpoint
-GET /projects
-
-## Description
-登録されているプロジェクト一覧を取得する。
-
-### Response Example
+レスポンス:
 
 ```json
-[
-  {
-    "id": 1,
-    "title": "タスクタイトル",
-    "status": "タスク詳細"
-  }
-]
+{"projectId":1,"title":"API example","status":0,"userId":1,"authorityId":0}
 ```
 
----
-# プロジェクト詳細取得
+## 一覧
 
-## Endpoint
-GET /projects/{id}
+上記と同じフィールドのオブジェクトを配列で返します。
 
-## Description
-登録されているプロジェクトに紐づいたタスクを取得する。
+## 詳細
 
-### Response Example
+配列ではなく、関連Taskを含む単一オブジェクトです。
 
 ```json
-[
-  {
-    "id": 1,
-    "project_id": 1,
-    "title": "タスクタイトル",
-    "content": "タスク詳細",
-    "tasks": [
-      {
-        "id": 1,
-        "title": "タスク",
-        "content": "タスク内容",
-        "status": 0
-      }
-    ]
-  }
-]
+{"projectId":1,"title":"API example","status":0,"authorityId":0,"tasks":[{"id":1,"title":"First task","content":"Example","status":0,"projectId":1,"userId":null}]}
 ```
 
-# プロジェクト更新
+現実装では詳細レスポンスの`authorityId`はDTOの初期値、内包するTaskの`userId`は未設定です。
 
-## Endpoint
-PUT /projects/{id}
+## 更新
 
-## Description
-指定したprojectを更新する。
-
-### Path Parameter
-
-| Parameter | Type   | Description |
-|-----------|--------|-------------|
-| id        | number | タスクID       |
-
-### Request
-Content-Type: application/json
-
-| Field   | Type   | Required | Description |
-|---------|--------|----------|-------------|
-| title   | string | yes      | プロジェクト名     |
-| status  | int    | yes      | プロジェクト状況    |
-
-### Request Example
 ```json
-{
-  "title": "タスクタイトル",
-  "status": 1
-}
+{"title":"Updated project","status":1,"authorityId":0}
 ```
-### Response Example
+
+レスポンス例:
+
 ```json
-{
-  "id": 1,
-  "title": "taro",
-  "status": "taro@example.com"
-}
+{"projectId":1,"title":"Updated project","status":1,"authorityId":0,"userId":null}
 ```
 
-# 4. タスク削除
+更新レスポンスの`userId`は現実装では未設定です。Projectの存在しないIDへの取得・更新は、現状404への変換がなく500になります。削除前に関連Taskを削除してください。
 
-## Endpoint
-DELETE /projects/{id}
-
-## Description
-指定したプロジェクトを削除する。
-
-### Response
-Status: 204 No Content
+[実行例](EXAMPLES.md)

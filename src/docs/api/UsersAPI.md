@@ -1,79 +1,25 @@
-# TaskManager API Specification
-## Base URL
-```
-http://localhost:8080
-```
+# ユーザー登録・認証API
 
-# ユーザー作成
-## Endpoint
-POST /users
+Base URL: `http://localhost:8080`。JSONリクエストは`Content-Type: application/json`を指定します。
 
-## Description
-ユーザーを新規作成する。
+## POST /users
 
-### Request
-Content-Type: application/json
+認証不要。ユーザーを作成します。成功時は **200・本文なし**です。
 
-| Field    | Type   | Required | Description |
-|----------|--------|----------|-------------|
-| name     | string | yes      | ユーザー名       |
-| email    | string | yes      | メールアドレス     |
-| password | string | yes      | パスワード       |
-
-### Request Example
 ```json
-{
-  "name": "taro",
-  "email": "taro@example.com",
-  "password": "1234"
-}
+{"name":"taro","mail":"taro@example.com","password":"example-password-123"}
 ```
 
-### Response
-Status: 200 OK
+メール項目は`mail`です。ユーザー一覧・詳細取得APIは未実装です。
+
+## POST /login
+
+認証不要。成功時は **200・JWT文字列**を返します（JSONオブジェクトではありません）。
+
 ```json
-{
-  "id": 1,
-  "name": "taro",
-  "email": "taro@example.com"
-}
+{"mail":"taro@example.com","password":"example-password-123"}
 ```
 
-# ユーザー一覧取得
-## Endpoint
-GET /users
+認証失敗時は401。トークンの有効期間は1時間です。他のAPIでは`Authorization: Bearer <token>`を指定します。
 
-## Description
-登録されているユーザー一覧を取得する。
-
-### Response Example
-```json
-[
-  {
-    "id": 1,
-    "name": "taro",
-    "email": "taro@example.com"
-  }
-]
-```
-
-# ユーザー取得
-## Endpoint
-GET /users/{id}
-
-## Description
-指定したユーザーを取得する。
-
-### Path Parameter
-| Parameter | Type    | Description |
-| --------- | ------- | ----------- |
-| id        | integer | ユーザーID      |
-
-### Response Example
-```json
-{
-  "id": 1,
-  "name": "taro",
-  "email": "taro@example.com"
-}
-```
+実行例は[API実行ガイド](EXAMPLES.md)を参照してください。
