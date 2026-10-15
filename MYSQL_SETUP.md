@@ -1,152 +1,75 @@
 # MySQL 設定ガイド
 
-このプロジェクトはMySQLを使用しています。以下の手順に従って環境を構築してください。
+## 設定ファイルの役割
 
-## ローカル開発環境
+| ファイル | 役割 |
+|---|---|
+| `application.yml` | アプリ名・デフォルトプロファイル・JWTなどの共通設定 |
+| `application-local.yml` | ローカルMySQL。デフォルトで有効。スキーマは`update` |
+| `application-prod.yml` | 本番MySQL。明示的に有効化。スキーマは`validate` |
 
-### 1. MySQLのインストール
+`dev`プロファイルは用意していません。ローカル起動はプロファイル指定不要です。
 
-**Mac (Homebrew):**
-```bash
-brew install mysql
-brew services start mysql
+## ローカル開発
+
+DockerでのDB起動と環境変数の読み込みは[README](README.md#セットアップ)を参照してください。
+
+既存のMySQLを使う場合は、先にデータベースを作成します。Dockerの`MYSQL_DATABASE`で作成済みなら不要です。
+
+```sql
+CREATE DATABASE IF NOT EXISTS taskmanager;
 ```
 
-**Windows:**
-- [MySQL公式サイト](https://dev.mysql.com/downloads/mysql/)からダウンロード
-- インストーラーを実行
+`.env.example`を`.env`にコピーし、接続情報と`JWT_SECRET`を設定します。`.env`はGit管理対象外で、自動読み込みはされません。以下は自分で管理するシェル形式のファイルを読み込む手順です。空白や特殊文字を含む値はクォートしてください。
 
-**Docker:**
 ```bash
-docker run --name mysql-local \
-  -e MYSQL_ROOT_PASSWORD=root \
-  -e MYSQL_DATABASE=taskmanager \
-  -p 3306:3306 \
-  -d mysql:8.0
+set -a
+. ./.env
+set +a
+./mvnw spring-boot:run
 ```
 
-### 2. データベースの作成
+## 環境変数
+
+| 変数 | localの既定値 | prod |
+|---|---|---|
+| `DB_HOST` | `localhost` | 必須 |
+| `DB_PORT` | `3306` | 必須 |
+| `DB_NAME` | `taskmanager` | 必須 |
+| `DB_USER` | `root` | 必須 |
+| `DB_PASSWORD` | `root` | 必須 |
+| `JWT_SECRET` | なし | 両環境で必須。UTF-8で32バイト以上 |
+
+JWT鍵は`openssl rand -hex 32`などで生成します。ローカルと本番で別の鍵を使用してください。
+
+## JARの作成と起動
+
+READMEのテスト手順で確認した後にJARを作成します。以下はローカルDBと環境変数が準備済みの場合です。
 
 ```bash
-mysql -u root -p
-# パスワード: root
-
-CREATE DATABASE taskmanager;
-USE taskmanager;
-```
-
-### 3. アプリケーション起動
-
-```bash
-mvn spring-boot:run
-```
-
-**または**
-
-```bash
-mvn package
+./mvnw package
 java -jar target/taskManager-0.0.1-SNAPSHOT.jar
 ```
 
-## AWS デプロイ (RDS for MySQL)
+## 本番MySQL / RDS
 
-### 1. AWS RDS インスタンスの作成
-
-1. AWSコンソール → RDS
-2. **データベースの作成** をクリック
-3. エンジン選択: **MySQL 8.0**
-4. テンプレート: **無料利用枠** ✅
-5. 以下の情報を設定:
-   - **DB インスタンス識別子**: taskmanager-db
-   - **マスターユーザー名**: admin
-   - **マスターパスワード**: [安全なパスワード]
-   - **DBインスタンスクラス**: db.t3.micro (無料枠)
-   - **ストレージ**: 20GB
-
-6. **データベース作成**
-
-### 2. セキュリティグループの設定
-
-1. RDS インスタンス選択
-2. **VPC セキュリティグループ** を確認
-3. インバウンドルール: ポート 3306 を開く
-   - ソース: アプリケーションのセキュリティグループ
-
-### 3. 環境変数の設定
-
-アプリケーションをデプロイする環境（EC2, ECS, Beanstalk など）で以下を設定:
+本番環境には上記の全環境変数を設定し、次のように起動します。
 
 ```bash
-export DB_HOST=taskmanager-db.xxxxx.ap-northeast-1.rds.amazonaws.com
-export DB_PORT=3306
-export DB_NAME=taskmanager
-export DB_USER=admin
-export DB_PASSWORD=your_secure_password
+java -jar target/taskManager-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod
 ```
 
-### 4. アプリケーション起動
-
-```bash
-# prod プロファイルで起動
-java -jar target/taskManager-0.0.1-SNAPSHOT.jar \
-  --spring.profiles.active=prod
-```
-
-## 環境ファイル (.env)
-
-ローカル開発環境で環境変数を管理する場合:
-
-**.env ファイル (gitignore に追加):**
-```
-DB_HOST=localhost
-DB_PORT=3306
-DB_NAME=taskmanager
-DB_USER=root
-DB_PASSWORD=root
-```
-
-**起動時に読み込む:**
-```bash
-export $(cat .env | xargs)
-java -jar target/taskManager-0.0.1-SNAPSHOT.jar \
-  --spring.profiles.active=dev
-```
-
-## 設定ファイルの説明
-
-- **application.yml**: ローカル開発用（デフォルト）
-  - H2互換の設定
-  - `ddl-auto: create` → テーブル自動作成
-
-- **application-prod.yml**: 本番用（RDS）
-  - 環境変数から接続情報を読み込み
-  - `ddl-auto: validate` → スキーマ検証のみ
+- 本番設定はTLS接続（`useSSL=true`）を使用します。証明書・接続先検証の要件は配備環境に合わせて確認してください。
+- RDSなどのネットワーク設定では、アプリケーションからDBの3306番ポートへ接続できるようにします。
+- `ddl-auto: validate`はテーブルを作成・変更しません。起動前にEntityに対応するスキーマを用意してください。現時点ではマイグレーション機構は未導入です。
+- ローカルの`update`も変更履歴を管理する仕組みではありません。本番のスキーマ移行には使用しません。
 
 ## トラブルシューティング
 
-### Connection refused
-```
-原因: MySQLが起動していない
-解決: brew services start mysql (Mac)
-     または MySQL のサービスを開始 (Windows)
-```
-
-### Access denied
-```
-原因: ユーザー名またはパスワードが違う
-確認: mysql -u root -p で接続試行
-```
-
-### Unknown database
-```
-原因: taskmanager データベースが存在しない
-解決: CREATE DATABASE taskmanager; を実行
-```
-
-## RDS 接続確認
-
-```bash
-# ローカルから RDS への接続確認
-mysql -h taskmanager-db.xxxxx.ap-northeast-1.rds.amazonaws.com \
-      -u admin -p taskmanager
-```
+| 症状 | 確認する内容 |
+|---|---|
+| Connection refused | MySQLの起動状態、ホスト、ポート |
+| Access denied | DBユーザー、パスワード、接続権限 |
+| Unknown database | `DB_NAME`に指定したDBの存在 |
+| JWT設定エラー | `JWT_SECRET`の設定とUTF-8でのバイト数 |
+| Schema validationエラー | 本番DBのスキーマとEntityの一致 |
