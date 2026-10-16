@@ -10,6 +10,12 @@
 
 `dev`プロファイルは用意していません。ローカル起動はプロファイル指定不要です。
 
+## Docker Compose
+
+アプリ・MySQLの一括起動は[READMEのCompose手順](README.md#docker-composeでアプリとmysqlを起動)を参照してください。ComposeのDBは`taskmanager`、接続ユーザーは`taskapp`、ホストはサービス名`db`です。ホスト側へのMySQLポート公開はありません。
+
+パスワードは`COMPOSE_DB_PASSWORD`と`COMPOSE_DB_ROOT_PASSWORD`を使用します。既存のボリュームでは初期化用環境変数を変更してもパスワードは変わりません。データを維持する場合はDB側のユーザー変更も必要です。
+
 ## ローカル開発
 
 DockerでのDB起動と環境変数の読み込みは[README](README.md#セットアップ)を参照してください。

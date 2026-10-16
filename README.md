@@ -192,7 +192,33 @@ docker run --rm --network YOUR_DB_NETWORK -p 8080:8080 \
   --env-file .env -e DB_HOST=YOUR_DB_CONTAINER task-manager:local
 ```
 
-Composeによる一括起動は未整備です。本番設定では事前のスキーマ準備も必要です。
+### Docker ComposeでアプリとMySQLを起動
+
+```bash
+cp .env.example .env
+openssl rand -hex 32
+```
+
+生成した値を`.env`の`JWT_SECRET`に設定します。既に`.env`がある場合はコピーせず、必要な項目を追加してください。Composeは`.env`を自動で読み込みます。
+
+```bash
+docker compose up --build -d --wait
+BASE_URL=http://localhost:8080 bash scripts/api-example.sh
+```
+
+Javaのホストインストールは不要です（API実行例にはBash・curl・Python 3が必要）。アプリは`127.0.0.1:8080`で公開し、MySQLはCompose内部のみで接続します。8080が使用中なら`.env`の`APP_PORT`を変更し、実行例のURLも合わせてください。
+
+MySQLは専用ユーザー`taskapp`で接続し、DB接続確認後にアプリを起動します。アプリのヘルスチェックは未認証の`GET /tasks`が401を返すことを確認します。起動順序は[Compose公式資料](https://docs.docker.com/compose/how-tos/startup-order)の`service_healthy`を使用しています。
+
+```bash
+docker compose ps
+docker compose logs -f app
+docker compose down
+```
+
+`down`でも`mysql-data`ボリュームは残るため、再起動後もデータを維持します。**`docker compose down -v`はDBデータを削除します。** DB資格情報を変更しても既存ボリューム内のユーザー情報は自動更新されません。
+
+Composeはローカル開発用です。既存の`mysql-local`コンテナとは別のDBを使用します。`DB_*`はCompose内では固定し、Compose専用の`COMPOSE_DB_PASSWORD`・`COMPOSE_DB_ROOT_PASSWORD`を使います。本番は`prod`設定と事前のスキーマ準備が必要です。
 
 ## 構成図
 
@@ -202,7 +228,11 @@ flowchart LR
     subgraph Container[アプリコンテナ / Java 17]
       App[Spring Boot]
     end
-    App -->|JDBC| DB[(MySQL)]
+    subgraph DatabaseContainer[DBコンテナ / MySQL 8]
+      DB[(MySQL)]
+    end
+    App -->|JDBC / Compose内部ネットワーク| DB
+    DB --> Volume[(mysql-dataボリューム)]
 ```
 
 ローカルではアプリをホスト上で直接実行することもできます。CIはDBを一時H2に切り替えます。
