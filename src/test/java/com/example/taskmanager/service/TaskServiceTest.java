@@ -17,7 +17,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -78,6 +81,57 @@ class TaskServiceTest {
     }
 
     @Test
+    @DisplayName("一覧が0件なら空リストを返す")
+    void get_noTasks_returnsEmptyList() {
+        // 準備
+        Long userId = 1L;
+
+        // リポジトリがからリストを返すように設定
+        when(taskRepository.findByUserUserId(userId))
+                .thenReturn(List.of());
+
+        // 実際にテスト対象の処理を実行する
+        List<TaskResponse> result = taskService.get(userId);
+
+        //assertなどで確認
+        assertTrue(result.isEmpty());
+        verify(taskRepository).findByUserUserId(userId);
+    }
+
+    @Test
+    @DisplayName("自分のTask一覧がDTOに変換されて返ること")
+    void get_ownedTasks_returnsTaskList() {
+        Long userId = 1L;
+
+        UserEntity user = new UserEntity();
+        user.setUserId(userId);
+
+        TaskEntity task = new TaskEntity();
+        task.setId(1);
+        task.setTitle("タスク");
+        task.setContent("内容");
+        task.setStatus(0);
+        task.setUser(user);
+
+        when(taskRepository.findByUserUserId(userId))
+                .thenReturn(List.of(task));
+
+        List<TaskResponse> result = taskService.get(userId);
+
+        assertEquals(1, result.size());
+
+        TaskResponse response = result.get(0);
+        assertEquals(1, response.getId());
+        assertEquals("タスク", response.getTitle());
+        assertEquals("内容", response.getContent());
+        assertEquals(0, response.getStatus());
+        assertEquals(userId, response.getUserId());
+
+        verify(taskRepository).findByUserUserId(userId);
+    }
+
+
+    @Test
     @DisplayName("正常系: find")
     void find_ownedTask_returnsTask() {
         int taskId = 1;
@@ -108,6 +162,23 @@ class TaskServiceTest {
         assertEquals(0, result.getStatus());
         assertEquals(1, result.getProjectId());
         assertEquals(1L, result.getUserId());
+    }
+
+    @Test
+    @DisplayName("単体取得で見つからなければ404")
+    void find_missingTask_throwsNotFount() {
+        int taskId = 1;
+        Long userId = 1L;
+
+        when(taskRepository.findByIdAndUserUserId(taskId, userId))
+                .thenReturn(Optional.empty());
+
+        ResponseStatusException exception = assertThrows(
+                ResponseStatusException .class,
+                () -> taskService.find(taskId, userId)
+        );
+
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
     }
 
     @Test
@@ -145,6 +216,20 @@ class TaskServiceTest {
     }
 
     @Test
-    void delete() {
+    @DisplayName("自分のTaskを削除する")
+    void delete_ownedTask_deletesTask() {
+        Long userId = 1L;
+        int taskId = 1;
+
+        TaskEntity task = new TaskEntity();
+        task.setId(taskId);
+
+        when(taskRepository.findByIdAndUserUserId(taskId,userId))
+                .thenReturn(Optional.of(task));
+
+        taskService.delete(taskId, userId);
+
+        verify(taskRepository).findByIdAndUserUserId(taskId,userId);
+        verify(taskRepository).delete(task);
     }
 }
