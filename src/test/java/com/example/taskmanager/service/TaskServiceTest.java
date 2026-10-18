@@ -20,10 +20,13 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
+
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -130,6 +133,8 @@ class TaskServiceTest {
         verify(taskRepository).findByUserUserId(userId);
     }
 
+    @Test
+    @DisplayName("一覧取得でuserIdがnullなら401")
 
     @Test
     @DisplayName("正常系: find")
@@ -216,6 +221,26 @@ class TaskServiceTest {
     }
 
     @Test
+    @DisplayName("更新で見つからなければ404・保存しない")
+    void update_missingTask_throwsNotFoundAndDoesNotSave() {
+        int taskId = 1;
+        Long userId = 1L;
+        TaskUpdateRequest request = new TaskUpdateRequest();
+
+        when(taskRepository.findByIdAndUserUserId(taskId, userId))
+                .thenReturn(Optional.empty());
+
+
+        ResponseStatusException exception = assertThrows(
+                ResponseStatusException .class,
+                () -> taskService.update(taskId, request, userId)
+        );
+
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
+        verify(taskRepository, never()).save(any(TaskEntity.class));
+    }
+
+    @Test
     @DisplayName("自分のTaskを削除する")
     void delete_ownedTask_deletesTask() {
         Long userId = 1L;
@@ -231,5 +256,23 @@ class TaskServiceTest {
 
         verify(taskRepository).findByIdAndUserUserId(taskId,userId);
         verify(taskRepository).delete(task);
+    }
+
+    @Test
+    @DisplayName("削除で見つからなければ404・削除しない")
+    void delete_missingTask_throwsNotFoundAndDoesNotDelete() {
+        int taskId = 1;
+        Long userId = 1L;
+
+        when(taskRepository.findByIdAndUserUserId(taskId, userId))
+                .thenReturn(Optional.empty());
+
+        ResponseStatusException exception = assertThrows(
+                ResponseStatusException .class,
+                () -> taskService.delete(taskId, userId)
+        );
+
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
+        verify(taskRepository, never()).delete(any(TaskEntity.class));
     }
 }
