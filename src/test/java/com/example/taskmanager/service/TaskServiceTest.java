@@ -26,10 +26,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class TaskServiceTest {
     @Mock
@@ -135,6 +132,17 @@ class TaskServiceTest {
 
     @Test
     @DisplayName("一覧取得でuserIdがnullなら401")
+    void requireUserId() {
+        // 実際にテスト対象の処理を実行する
+        ResponseStatusException exception = assertThrows(
+                ResponseStatusException.class,
+                () -> taskService.get(null)
+        );
+
+        //assertなどで確認
+        assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatusCode());
+        verifyNoInteractions(taskRepository);
+    }
 
     @Test
     @DisplayName("正常系: find")
