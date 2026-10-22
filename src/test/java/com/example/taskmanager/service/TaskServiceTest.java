@@ -262,6 +262,21 @@ class TaskServiceTest {
     }
 
     @Test
+    @DisplayName("更新でuserIdがnullなら401")
+    void update_nullUserId_throwsUnauthorized() {
+        int taskId = 1;
+        TaskUpdateRequest request = new TaskUpdateRequest();
+        // 実際にテスト対象の処理を実行する
+        ResponseStatusException exception = assertThrows(
+                ResponseStatusException .class,
+                () -> taskService.update(taskId, request,null)
+        );
+
+        assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatusCode());
+
+    }
+
+    @Test
     @DisplayName("自分のTaskを削除する")
     void delete_ownedTask_deletesTask() {
         Long userId = 1L;
@@ -295,5 +310,19 @@ class TaskServiceTest {
 
         assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
         verify(taskRepository, never()).delete(any(TaskEntity.class));
+    }
+
+    @Test
+    @DisplayName("削除でuserIdがnullなら401")
+    void delete_nullUserId_throwsUnauthorized() {
+        int taskId = 1;
+        // 実際にテスト対象の処理を実行する
+        ResponseStatusException exception = assertThrows(
+                ResponseStatusException .class,
+                () -> taskService.delete(taskId, null)
+        );
+
+        assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatusCode());
+
     }
 }
