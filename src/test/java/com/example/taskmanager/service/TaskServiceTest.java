@@ -195,6 +195,19 @@ class TaskServiceTest {
     }
 
     @Test
+    @DisplayName("単体取得でuserIdがnullなら401")
+    void find_nullUserId_throwsUnauthorized() {
+        // 実際にテスト対象の処理を実行する
+        ResponseStatusException exception = assertThrows(
+                ResponseStatusException .class,
+                () -> taskService.get(null)
+        );
+
+        assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatusCode());
+
+    }
+
+    @Test
     @DisplayName("正常系: update")
     void update_ownedTask_returnsUpdatedTask() {
         int taskId = 1;
